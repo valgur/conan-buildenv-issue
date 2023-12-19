@@ -8,17 +8,18 @@ class PackageAConan(ConanFile):
     version = "0.0.0"
     package_type = "shared-library"
     settings = "os", "compiler", "arch", "build_type"
-    generators = "CMakeToolchain", "VirtualBuildEnv"
-    exports_sources = ["CMakeLists.txt", "hello.c", "hello.h"]
+    generators = "CMakeToolchain", "CMakeDeps", "VirtualBuildEnv"
+    exports_sources = ["CMakeLists.txt", "pkg-a.c", "pkg-a.h"]
 
     def layout(self):
         basic_layout(self)
 
     def requirements(self):
         # The implicit run=True causes buildenv vars from mock-gcc to be propagated to current and downstream host context
-        self.requires("mock-gcc/0.0.0", headers=False, libs=True)
+        self.requires("mock-gcc/0.0.0", headers=False, libs=True, transitive_libs=True)
         # Setting run=False fixes the issue
-        # self.requires("mock-gcc/0.0.0", headers=False, libs=True, run=False)
+        # self.requires("mock-gcc/0.0.0", headers=False, libs=True, transitive_libs=True, run=False)
+        return
 
     def build_requirements(self):
         self.tool_requires("mock-gcc/0.0.0")
@@ -33,5 +34,4 @@ class PackageAConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.components["hello_comp"].libs = ["hello"]
-        self.cpp_info.components["hello_comp"].requires = ["mock-gcc::mock-gcc"]
+        self.cpp_info.libs = ["pkg-a"]

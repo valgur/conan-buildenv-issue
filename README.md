@@ -3,7 +3,7 @@ This repo is a minimal setup to reproduce a potential pitfall (or even a bug) wh
 The setup is:
 1. `mock-gcc` defines `self.buildenv_info.define("CC", "mock-gcc")` etc. in its `package_info` method and exports some runtime libraries.
 2. `package-a` uses `mock-gcc` in both the build context (for the compiler) and host context (to create a dependency on the runtime libs) to build a library.
-3. `package-b` uses `package-a` as a library dependency.
+3. `package-b` uses `package-a` as a library dependency to build an executable.
 
 The expected result is for the runtime libraries in `mock-gcc` to become a transitive dependency for `package-b` and nothing more.
 
